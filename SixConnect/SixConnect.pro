@@ -26,11 +26,15 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainscene.cpp \
-    mypushbutton.cpp
+    mypushbutton.cpp \
+    playscene.cpp \
+    playmode.cpp
 
 HEADERS += \
         mainscene.h \
-    mypushbutton.h
+    mypushbutton.h \
+    playscene.h \
+    playmode.h
 
 FORMS += \
         mainscene.ui

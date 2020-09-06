@@ -1,5 +1,6 @@
 #ifndef MAINSCENE_H
 #define MAINSCENE_H
+#include"playscene.h"
 #include<QSound>
 #include <QMainWindow>
 #include<QPainter>
@@ -15,6 +16,7 @@ public:
     explicit MainScene(QWidget *parent = 0);
     ~MainScene();
     void paintEvent(QPaintEvent *);
+    PlayScene *chooseModel;
 
 
 

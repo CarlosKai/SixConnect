@@ -4,6 +4,7 @@
 #include <QWidget>
 #include<QPushButton>
 #include<QPropertyAnimation>
+#include<QMouseEvent>
 class MyPushButton : public QPushButton
 {
     Q_OBJECT
@@ -14,6 +15,8 @@ public:
     MyPushButton(QString normalImg , QString pressImg="");
     QString normalImgPath;//默认显示路径
     QString pressImgPath;//按下后显示路径
+    void mousePressEvent(QMouseEvent *e);
+    void mouseReleaseEvent(QMouseEvent *e);
 
     //向下跳跃，向上跳跃
     void zoomdown();

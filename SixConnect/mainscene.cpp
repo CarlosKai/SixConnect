@@ -1,6 +1,8 @@
 #include "mainscene.h"
 #include "ui_mainscene.h"
 #include "mypushbutton.h"
+#include<QTimer>
+#include<QSound>
 MainScene::MainScene(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainScene)
@@ -33,31 +35,55 @@ MainScene::MainScene(QWidget *parent) :
     //按钮音效
     QSound *chooseSound =new QSound(":/res/TapButtonSound.wav",this);
 
-
+    chooseModel=new PlayScene;//建立一个新的游戏场景
     //按钮跳跃特效
     connect(firstchoosebutton,&MyPushButton::clicked,this,[=](){
+        chooseModel->game->choose=0;//根据选择模式的不同做出不同选择
         chooseSound->play();
         firstchoosebutton->zoomdown();
         firstchoosebutton->zoomup();
+        QTimer::singleShot(400,this,[=](){
+            this->hide();
+            chooseModel->show();
+        });
     });
     connect(secondchoosebutton,&MyPushButton::clicked,this,[=](){
+        chooseModel->game->choose=1;
         chooseSound->play();
         secondchoosebutton->zoomdown();
         secondchoosebutton->zoomup();
+        QTimer::singleShot(500,this,[=](){
+            this->hide();
+            chooseModel->show();
+        });
+
     });
     connect(thirdchoosebutton,&MyPushButton::clicked,this,[=](){
+        chooseModel->game->choose=2;
         chooseSound->play();
         thirdchoosebutton->zoomdown();
         thirdchoosebutton->zoomup();
+        QTimer::singleShot(500,this,[=](){
+            this->hide();
+            chooseModel->show();
+        });
     });
     connect(fourthchoosebutton,&MyPushButton::clicked,this,[=](){
+        chooseModel->game->choose=3;
         chooseSound->play();
         fourthchoosebutton->zoomdown();
         fourthchoosebutton->zoomup();
+        QTimer::singleShot(400,this,[=](){
+            this->hide();
+            chooseModel->show();
+        });
     });
 
-
-
+    //监听playscene的返回按钮
+    connect(chooseModel,&PlayScene::goback,this,[=](){
+       chooseModel->hide();
+       this->show();
+    });
 
 }
 

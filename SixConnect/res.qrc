@@ -8,5 +8,7 @@
         <file>res/title.png</file>
         <file>res/choose4.png</file>
         <file>res/TapButtonSound.wav</file>
+        <file>res/back.png</file>
+        <file>res/back2.png</file>
     </qresource>
 </RCC>
