@@ -38,14 +38,17 @@ MainScene::MainScene(QWidget *parent) :
 
 
     chooseModel=new PlayScene;//建立一个新的游戏场景
+
     //按钮跳跃特效
     connect(firstchoosebutton,&MyPushButton::clicked,this,[=](){
         chooseModel->game->choose=0;//根据选择模式的不同做出不同选择
         chooseSound->play();
         firstchoosebutton->zoomdown();
         firstchoosebutton->zoomup();
+        chooseModel->game->startGame(chooseModel->game->choose);
         QTimer::singleShot(400,this,[=](){
             this->hide();
+            chooseModel->setGeometry(this->geometry());
             chooseModel->show();
         });
     });
@@ -54,8 +57,10 @@ MainScene::MainScene(QWidget *parent) :
         chooseSound->play();
         secondchoosebutton->zoomdown();
         secondchoosebutton->zoomup();
+        chooseModel->game->startGame(chooseModel->game->choose);
         QTimer::singleShot(500,this,[=](){
             this->hide();
+            chooseModel->setGeometry(this->geometry());
             chooseModel->show();
         });
 
@@ -65,8 +70,10 @@ MainScene::MainScene(QWidget *parent) :
         chooseSound->play();
         thirdchoosebutton->zoomdown();
         thirdchoosebutton->zoomup();
+        chooseModel->game->startGame(chooseModel->game->choose);
         QTimer::singleShot(500,this,[=](){
             this->hide();
+            chooseModel->setGeometry(this->geometry());
             chooseModel->show();
         });
     });
@@ -75,18 +82,24 @@ MainScene::MainScene(QWidget *parent) :
         chooseSound->play();
         fourthchoosebutton->zoomdown();
         fourthchoosebutton->zoomup();
+        chooseModel->game->startGame(chooseModel->game->choose);
         QTimer::singleShot(400,this,[=](){
             this->hide();
+            chooseModel->setGeometry(this->geometry());
             chooseModel->show();
         });
     });
 
     //监听playscene的返回按钮
     connect(chooseModel,&PlayScene::goback,this,[=](){
+       this->setGeometry(chooseModel->geometry());
        chooseModel->hide();
        this->show();
        chooseModel->game->startGame(-1);
     });
+
+
+
 
 }
 

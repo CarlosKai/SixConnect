@@ -11,7 +11,8 @@ enum GameStatus
 {
     PLAYING, //进行中
     WIN,     //游戏胜利
-    DEAD     //游戏平局
+    DEAD,   //游戏平局
+    doubleAI //AI自动下棋
 };
 
 class PlayMode : public QObject
