@@ -3,6 +3,8 @@
 #include"playmode.h"
 #include <QMainWindow>
 
+
+
 class PlayScene : public QMainWindow
 {
     Q_OBJECT
@@ -18,6 +20,8 @@ public:
     void mouseMoveEvent(QMouseEvent *event);
     // 实际落子
     void mouseReleaseEvent(QMouseEvent *event);
+
+    void chessOneByPerson();
 
 signals:
     void goback();

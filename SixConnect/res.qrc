@@ -10,5 +10,9 @@
         <file>res/TapButtonSound.wav</file>
         <file>res/back.png</file>
         <file>res/back2.png</file>
+        <file>res/BackButtonSound.wav</file>
+        <file>res/chessone.wav</file>
+        <file>res/lose.wav</file>
+        <file>res/win.wav</file>
     </qresource>
 </RCC>

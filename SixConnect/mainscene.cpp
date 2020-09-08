@@ -3,6 +3,10 @@
 #include "mypushbutton.h"
 #include<QTimer>
 #include<QSound>
+
+//按钮音效
+QSound *chooseSound =new QSound(":/res/TapButtonSound.wav");
+
 MainScene::MainScene(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainScene)
@@ -32,8 +36,6 @@ MainScene::MainScene(QWidget *parent) :
     fourthchoosebutton->setParent(this);
     fourthchoosebutton->move(this->width()*0.85-fourthchoosebutton->width()*0.5,this->height()*0.55);
 
-    //按钮音效
-    QSound *chooseSound =new QSound(":/res/TapButtonSound.wav",this);
 
     chooseModel=new PlayScene;//建立一个新的游戏场景
     //按钮跳跃特效
@@ -83,6 +85,7 @@ MainScene::MainScene(QWidget *parent) :
     connect(chooseModel,&PlayScene::goback,this,[=](){
        chooseModel->hide();
        this->show();
+       chooseModel->game->startGame(-1);
     });
 
 }

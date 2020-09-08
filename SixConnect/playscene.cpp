@@ -6,14 +6,21 @@
 #include<QDebug>
 #include<QPainter>
 #include<QTimer>
-
-const int kBoardSizeNum = 20;//棋盘大小
+#include<QSound>
+#include<QMessageBox>
 const int kBoardMargin = 50; // 棋盘边缘空隙
 const int kRadius = 15; // 棋子半径
 const int kMarkSize = 6; // 落子标记边长
 const int kBlockSize = 40; // 格子的大小
 const int kPosDelta = 20; // 鼠标点击的模糊距离上限
 const int kAIDelay = 700; // AI下棋的思考时间
+
+//创建返回音效和下棋音效
+QSound *backSound=new QSound(":/res/BackButtonSound.wav");
+QSound *chessSound=new QSound(":/res/chessone.wav");
+QSound *deadSound=new QSound(":/res/lose.wav");
+QSound *winSound=new QSound(":/res/win.wav");
+
 
 PlayScene::PlayScene(QWidget *parent) : QMainWindow(parent)
 {
@@ -43,11 +50,10 @@ PlayScene::PlayScene(QWidget *parent) : QMainWindow(parent)
     //初始化
     for(int i=0;i<kBoardSizeNum;i++){
         for(int j=0;j<kBoardSizeNum;j++){
-            game->map[i][j]=0;
             readyClick[i][j]=0;
         }
     }
-    game->playerFlag=1;//暂时初始化为0
+
     setMouseTracking(true);//鼠标跟随
 
     //创建返回按钮
@@ -56,11 +62,14 @@ PlayScene::PlayScene(QWidget *parent) : QMainWindow(parent)
     backBtn->move(this->width()*0.97-backBtn->width(),this->height()*0.95-backBtn->height());
 
     connect(backBtn,&MyPushButton::clicked,this,[=](){
+        backSound->play();
         QTimer::singleShot(400,this,[=](){
+
             this->hide();
             emit this->goback();
         });
     });
+
 
 }
 
@@ -117,8 +126,89 @@ void PlayScene::paintEvent(QPaintEvent *)
             }
         }
 
+
+
+
     update();//一定要重画，不然只会执行一次
 }
+
+void PlayScene::chessOneByPerson()
+{
+    // 根据当前存储的坐标下子
+    // 只有有效点击才下子，并且该处没有子
+    if (clickPosRow != -1 && clickPosCol != -1 && game->map[clickPosRow][clickPosCol] == 0)
+    {
+        game->actionByPerson(clickPosRow, clickPosCol);
+        chessSound->play();
+        // 重绘
+        update();
+    }
+
+    // 判断输赢
+    if (clickPosRow > 0 && clickPosRow < kBoardSizeNum &&
+        clickPosCol > 0 && clickPosCol < kBoardSizeNum &&
+        (game-> map[clickPosRow][clickPosCol] == 1 ||
+            game-> map[clickPosRow][clickPosCol] == -1))
+    {
+        if (game->isWin(clickPosRow, clickPosCol) && game->gameStatus == PLAYING)
+        {
+            qDebug() << "win";
+            game->gameStatus = WIN;
+            winSound->play();
+            QString str;
+            if (game-> map[clickPosRow][clickPosCol] == 1)
+                str = "white player";
+            else if (game-> map[clickPosRow][clickPosCol] == -1)
+                str = "black player";
+            QMessageBox::StandardButton btnValue = QMessageBox::information(this, "congratulations", str + " win!");
+
+            // 重置游戏状态，否则容易死循环
+            if (btnValue == QMessageBox::Ok)
+            {
+                game->startGame(game->choose);
+                game->gameStatus = PLAYING;
+            }
+        }
+    }
+
+    // 判断禁手
+    if (game->choose==1&&clickPosRow > 0 && clickPosRow < kBoardSizeNum &&
+        clickPosCol > 0 && clickPosCol < kBoardSizeNum &&
+        (game-> map[clickPosRow][clickPosCol] == 1 ||
+            game-> map[clickPosRow][clickPosCol] == -1))
+    {
+        //qDebug()<<game->isBan(clickPosRow, clickPosCol)<<'1';
+        if (game->isBan(clickPosRow, clickPosCol) && game->gameStatus == PLAYING && !game->playerFlag)
+        {
+            qDebug() << "ban";
+            game->gameStatus = PLAYING;
+            QMessageBox::StandardButton btnValue = QMessageBox::information(this, "Notation!"," You can't chess here!");
+            if (btnValue == QMessageBox::Ok)
+            {
+                game->gameStatus = PLAYING;
+                game->map[clickPosRow][clickPosCol]=0;
+                game->playerFlag=!(game->playerFlag);
+            }
+        }
+
+    }
+
+
+    // 判断死局
+    if (game->isDead())
+    {
+        deadSound->play();
+        QMessageBox::StandardButton btnValue = QMessageBox::information(this, "oops", "dead game!");
+        if (btnValue == QMessageBox::Ok)
+        {
+            game->startGame(game->choose);
+            game->gameStatus = PLAYING;
+        }
+
+    }
+}
+
+
 
 void PlayScene::mouseMoveEvent(QMouseEvent *event)
 {
@@ -175,8 +265,21 @@ void PlayScene::mouseMoveEvent(QMouseEvent *event)
 }
 
 
-
 void PlayScene::mouseReleaseEvent(QMouseEvent *event)
 {
-
+    // 人下棋，并且不能抢机器的棋
+    if (game->choose== 1 )
+    {
+        chessOneByPerson();
+    }
+// 如果是人机模式，需要调用AI下棋
+//    if (game->choose == 0 && !game->playerFlag)
+//    {
+//        // 用定时器做一个延迟
+//        QTimer::singleShot(kAIDelay, this, SLOT(chessOneByAI()));
+//    }
 }
+
+
+
+
