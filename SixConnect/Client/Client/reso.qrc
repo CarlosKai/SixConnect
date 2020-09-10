@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>reso/background.png</file>
+        <file>reso/logo.png</file>
+        <file>reso/reconnect.png</file>
+        <file>reso/reconnect2.png</file>
+    </qresource>
+</RCC>

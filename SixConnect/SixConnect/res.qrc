@@ -1,0 +1,20 @@
+<RCC>
+    <qresource prefix="/">
+        <file>res/background.png</file>
+        <file>res/choose1.png</file>
+        <file>res/choose2.png</file>
+        <file>res/choose3.png</file>
+        <file>res/logo.png</file>
+        <file>res/title.png</file>
+        <file>res/choose4.png</file>
+        <file>res/TapButtonSound.wav</file>
+        <file>res/back.png</file>
+        <file>res/back2.png</file>
+        <file>res/BackButtonSound.wav</file>
+        <file>res/chessone.wav</file>
+        <file>res/lose.wav</file>
+        <file>res/win.wav</file>
+        <file>res/tempback.png</file>
+        <file>res/tempback2.png</file>
+    </qresource>
+</RCC>
