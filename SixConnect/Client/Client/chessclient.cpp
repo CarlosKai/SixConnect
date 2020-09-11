@@ -47,16 +47,13 @@ chessClient::chessClient(QWidget *parent) :
     connect(reconnect,&MyPushButton::clicked,this,[=](){
          initchessbord();
         QTimer::singleShot(400,this,[=](){
-            //game->choose不需要进行调整，因为此时对象已经消亡了
-
             //主动和对方断开链接
             tcpSock->disconnectFromHost();
             tcpSock->close();
+            initchessbord();
             tcpSock=NULL;
             tcpSock = new QTcpSocket(this);
-
-            tcpSock->connectToHost(QHostAddress("192.168.137.1"),8888); //改到本机
-
+            tcpSock->connectToHost(QHostAddress("192.168.137.1"),8888); //改到本机//192.168.137.1
             connect(tcpSock,SIGNAL(readyRead()),this,SLOT(readyRead_Slots()));
         });
     });
@@ -253,14 +250,14 @@ int chessClient:: chessplayer(char chess,int x,int y)
 
  }
 
-void chessClient::on_pushButton_clicked()
-{
-    initchessbord();
-    x=876;y=826;
-    flagjudget=1;
-    flag=0;
-    update();  //要加重绘事件
-}
+//void chessClient::on_pushButton_clicked()
+//{
+//    initchessbord();
+//    x=876;y=826;
+//    flagjudget=1;
+//    flag=0;
+//    update();  //要加重绘事件
+//}
 
 
 void chessClient::readyRead_Slots()

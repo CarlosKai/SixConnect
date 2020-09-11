@@ -29,7 +29,7 @@ public:
     void initchessbord();
 
 private slots:
-    void on_pushButton_clicked();
+//    void on_pushButton_clicked();
 
 protected slots:
     void readyRead_Slots();
