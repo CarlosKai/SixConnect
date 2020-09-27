@@ -12,10 +12,11 @@ class PlayScene : public QMainWindow
     Q_OBJECT
 
 private:
-    int value=61;
+    int value=60;
     QLabel *countTime;
     QTimer *pTimer;
     int timeStop;
+    bool AIfirst=0;
 
 public:
     explicit PlayScene(QWidget *parent = nullptr);

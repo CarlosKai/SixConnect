@@ -3,14 +3,12 @@
 
 #include <QMainWindow>
 #include <QWidget>
-#include <QMouseEvent>    //填加鼠标事件
+#include <QMouseEvent>
 #include <QKeyEvent>
 #include<QDebug>
 #include <QPixmap>
 #include <QTcpServer>
 #include <QTcpSocket>   //服务器
-
-const int bifenBAI=0,bidenHEI=0;
 
 const int N=860;
 const int M=20;
@@ -31,13 +29,15 @@ public:
     void mousePressEvent(QMouseEvent *event);
     void initchessbord();
     int chessplayer(char chess,int x,int y);     //棋盘数组入参
-    int checkchess(char flag,int i,int j);          //输赢检测
+    int checkchess(char flag,int i,int j);       //输赢检测
+    bool flag=1;                   //黑白棋标志位设定是对方先下棋
+    int processing=0;
+    int firstStep=0;
 signals:
     void mySignal();
     void goback();
 
-private slots:
-    void on_pushButton_clicked();
+
 
 protected slots:
     void newConnection_Slots();           //网络连接
@@ -48,15 +48,15 @@ private:
     int huiqix=641,huiqiy=641;       //记录最后一步
     QPainter *pen;  //框
     QPainter *pointpen;  //线
-    QPainter *Pointpoint;   //点
-     QPainter *Pointpoint2;
+    QPainter *Pointpoint2;
     QPixmap pix;
-    bool flag=1;                   //黑白棋标志位设定是对方先下棋
+
     bool flagjudget=1;             //对方下棋标志位
     int x=876,y=826;
 
-    QTcpServer *tcpSever;
     QTcpSocket *tcpSock;
+    QTcpServer *tcpSever;
+
 };
 
 #endif // MYCHESSPOINT_H

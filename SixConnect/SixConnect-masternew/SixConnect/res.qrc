@@ -20,5 +20,9 @@
         <file>res/stop2.png</file>
         <file>res/withdraw.png</file>
         <file>res/withdraw2.png</file>
+        <file>res/Soundbackground.wav</file>
+        <file>res/backSound.wav</file>
+        <file>res/first.png</file>
+        <file>res/first2.png</file>
     </qresource>
 </RCC>

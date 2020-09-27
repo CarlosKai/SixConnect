@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui multimedia
+QT       += core gui multimedia network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -46,3 +46,8 @@ RESOURCES += \
     res.qrc
 
 CONFIG += C++11
+CONFIG += resources_big
+
+
+
+

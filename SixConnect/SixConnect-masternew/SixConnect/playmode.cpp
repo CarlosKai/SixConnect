@@ -2,6 +2,7 @@
 #include<QtDebug>
 #include<vector>
 #include<QTime>
+#include<playscene.h>
 PlayMode::PlayMode(QObject *parent) : QObject(parent)
 {
 }

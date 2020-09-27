@@ -9,6 +9,7 @@
 #include<QSound>
 #include<QMessageBox>
 #include<QLabel>
+#include<QTime>
 
 const int kBoardMargin = 50; // 棋盘边缘空隙
 const int kRadius = 15; // 棋子半径
@@ -30,6 +31,7 @@ PlayScene::PlayScene(int index)
 
     timeStop=0;
     pTimer=NULL;
+
 
     if(index==1){
 
@@ -87,6 +89,8 @@ PlayScene::PlayScene(int index)
         }
     }
 
+    AIfirst=1;
+
     setMouseTracking(true);//鼠标跟随
 
     //创建返回按钮
@@ -94,6 +98,32 @@ PlayScene::PlayScene(int index)
     backBtn->setParent(this);
     backBtn->move(this->width()*0.97-backBtn->width(),this->height()*0.95-backBtn->height());
 
+
+    if(index==0){
+        //AI先手按钮
+        MyPushButton *stopBtn=new MyPushButton(":/res/first2.png",":/res/first.png");
+        stopBtn->setParent(this);
+        stopBtn->move(this->width()*0.97-stopBtn->width(),this->height()*0.85-stopBtn->height());
+        connect(stopBtn,&MyPushButton::clicked,this,[=](){
+            backSound->play();
+            if(AIfirst&&game->choose==0){
+                QTime time1;
+                time1= QTime::currentTime();
+                qsrand(time1.msec()+time1.second()*1000);
+                int x = qrand() % 10;    //产生10以内的随机数
+                time1= QTime::currentTime();
+                int y = qrand() % 10;
+                game->map[x+5][y+5]=1;
+                game->playerFlag = !game->playerFlag;
+                game->updateGameMap(x+5,y+5);
+            update();
+            }
+            AIfirst=0;
+
+
+        });
+
+    }
     if(index==2){
         //暂停按钮
         MyPushButton *stopBtn=new MyPushButton(":/res/stop2.png",":/res/stop.png");
@@ -335,13 +365,8 @@ void PlayScene::chessOneByPerson()
                     pTimer->start();
                     timeStop=1;
                   //  connect(pTimer, &QTimer::timeout, this, &PlayScene::on_timer_timeout);
-
                 }
-
             }
-
-
-
         }
 
     }

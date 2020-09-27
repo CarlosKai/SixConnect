@@ -9,6 +9,9 @@
 #include <QHostAddress>
 #include<QMenuBar>
 #include<QTimer>
+#include<QSound>
+
+QSound *chessSound=new QSound(":/reso/chessone.wav");
 
 chessClient::chessClient(QWidget *parent) :
     QMainWindow(parent),
@@ -45,7 +48,7 @@ chessClient::chessClient(QWidget *parent) :
     reconnect->move(this->width()*0.97-reconnect->width(),this->height()*0.95-reconnect->height());
 
     connect(reconnect,&MyPushButton::clicked,this,[=](){
-         initchessbord();
+        initchessbord();
         QTimer::singleShot(400,this,[=](){
             //主动和对方断开链接
             tcpSock->disconnectFromHost();
@@ -53,7 +56,7 @@ chessClient::chessClient(QWidget *parent) :
             initchessbord();
             tcpSock=NULL;
             tcpSock = new QTcpSocket(this);
-            tcpSock->connectToHost(QHostAddress("192.168.137.1"),8888); //改到本机//192.168.137.1
+            tcpSock->connectToHost(QHostAddress("10.30.29.28"),8888); //改到本机//192.168.137.1
             connect(tcpSock,SIGNAL(readyRead()),this,SLOT(readyRead_Slots()));
         });
     });
@@ -62,11 +65,11 @@ chessClient::chessClient(QWidget *parent) :
     initchessbord();
     ui->textEdit->setStyleSheet("background-color:transparent");//设置EditLine背景为透明
 
-   //读linedit上的值，然后判断连接是否成功
+    //读linedit上的值，然后判断连接是否成功
 
     tcpSock = new QTcpSocket(this);
 
-    tcpSock->connectToHost(QHostAddress("192.168.137.1"),8888); //改到本机
+    tcpSock->connectToHost(QHostAddress("10.30.29.28"),8888); //改到本机
 
     connect(tcpSock,SIGNAL(readyRead()),this,SLOT(readyRead_Slots()));
 }
@@ -107,80 +110,80 @@ void chessClient:: paintEvent(QPaintEvent *event)
     pointpen.setColor(Qt::black);
 
     huajia2.setPen(pointpen);
-   for(int x=100;x<=N+1 ;x+=40)
-   {
-     huajia2.drawLine(x,50,x,810);
-   }
-   for(int y=50;y<=N+1;y+=40)
-   {
-      huajia2.drawLine(100,y,860,y);
-   }
+    for(int x=100;x<=N+1 ;x+=40)
+    {
+        huajia2.drawLine(x,50,x,810);
+    }
+    for(int y=50;y<=N+1;y+=40)
+    {
+        huajia2.drawLine(100,y,860,y);
+    }
 #endif
-   //开始画棋盘上的圆
-      QPainter huajia3(this);
-      QPen Pointpoint;
+    //开始画棋盘上的圆
+    QPainter huajia3(this);
+    QPen Pointpoint;
 
-      huajia3.save();
-      huajia3.setPen(Pointpoint);
-      QBrush brush(Qt::black);
-      huajia3.setBrush(brush);
+    huajia3.save();
+    huajia3.setPen(Pointpoint);
+    QBrush brush(Qt::black);
+    huajia3.setBrush(brush);
 
-      Pointpoint.setStyle(Qt::NoPen);  //去掉画笔
-      huajia3.restore();
+    Pointpoint.setStyle(Qt::NoPen);  //去掉画笔
+    huajia3.restore();
 
-      //刷新数组
-  if(x<875&&y<825) //设定是客户端先下棋，然后服务器下棋
-  {
-         if(flag==1)
-          {
-              if(flagjudget==0)   //刷新白棋
-              {
-                  if(1==chessplayer('o',(x-85)/40,(y-35)/40))          //只要是服务器发过来存储为白棋
-                  {
+    //刷新数组
+    if(x<875&&y<825) //设定是客户端先下棋，然后服务器下棋
+    {
+        if(flag==1)
+        {
+            if(flagjudget==0)   //刷新白棋
+            {
+                if(1==chessplayer('o',(x-85)/40,(y-35)/40))          //只要是服务器发过来存储为白棋
+                {
 
-                      ui->lineEdit->setText("请点击正确的坐标!");
-                  }
+                    ui->lineEdit->setText("请点击正确的坐标!");
+                }
                 flag=0;
-              }
-          }
-          else if(flag==0)  //黑棋
-          {
-             if(1==chessplayer('x',(x-85)/40,(y-35)/40))
-             {
+            }
+        }
+        else if(flag==0)  //黑棋
+        {
+            if(1==chessplayer('x',(x-85)/40,(y-35)/40))
+            {
                 ui->lineEdit->setText("请点击正确的坐标!");
-             }
-             flag=1;                //初始化
-             flagjudget=1;
-             qDebug()<<"黑棋已经下了，等待对方";
-          }
-
-     x=876,y=826;
-   }
-
-
-  //刷新棋局
-  for(int i=0;i<M;i++)
-  {
-      for(int j=0;j<M;j++)
-      {
-        if(chessbord[i][j]=='o')
-        {
-            huajia3.save();
-            QBrush brush(Qt::white);
-            huajia3.setBrush(brush);
-            huajia3.drawEllipse(i*40+85,j*40+35,30,30);
-            huajia3.restore();
+            }
+            flag=1;                //初始化
+            flagjudget=1;
+            qDebug()<<"黑棋已经下了，等待对方";
         }
-      else  if(chessbord[i][j]=='x')
+
+        x=876,y=826;
+    }
+
+
+    //刷新棋局
+    for(int i=0;i<M;i++)
+    {
+        for(int j=0;j<M;j++)
         {
-            huajia3.save();
-            QBrush brush(Qt::black);
-            huajia3.setBrush(brush);
-            huajia3.drawEllipse(i*40+85,j*40+35,30,30);
-            huajia3.restore();
+            if(chessbord[i][j]=='o')
+            {
+                huajia3.save();
+                QBrush brush(Qt::white);
+                huajia3.setBrush(brush);
+                huajia3.drawEllipse(i*40+85,j*40+35,30,30);
+                huajia3.restore();
+            }
+            else  if(chessbord[i][j]=='x')
+            {
+                huajia3.save();
+                QBrush brush(Qt::black);
+                huajia3.setBrush(brush);
+                huajia3.drawEllipse(i*40+85,j*40+35,30,30);
+                huajia3.restore();
+            }
         }
-      }
-  }
+    }
 
 
 
@@ -190,74 +193,66 @@ int chessClient:: chessplayer(char chess,int x,int y)
 {
     //'o'代表白色   ，‘x’代表黑色
 
-       if(chessbord[x][y]=='o'||chessbord[x][y]=='x')   //检测下棋是否重复
-       {
-           return 1;
-       }
-       if(chess=='o')
-       {
-         chessbord[x][y]='o';
-       }
-       else if(chess=='x')
-       {
-       chessbord[x][y]='x';
-       }
-       qDebug()<<chess<<endl;
-       return 0;
+    if(chessbord[x][y]=='o'||chessbord[x][y]=='x')   //检测下棋是否重复
+    {
+        return 1;
+    }
+    if(chess=='o')
+    {
+        chessbord[x][y]='o';
+    }
+    else if(chess=='x')
+    {
+        chessbord[x][y]='x';
+    }
+    qDebug()<<chess<<endl;
+    return 0;
 
 }
 
 
- void  chessClient::mousePressEvent(QMouseEvent *event)
- {
-     QString str;
+void  chessClient::mousePressEvent(QMouseEvent *event)
+{
+    QString str;
 
     if(event->button()==Qt::LeftButton)
-     {
-         str = "New-location:" + QString::number((event->x()-85)/40) + "   " + QString::number((event->y()-35)/40);
-         ui->lineEdit->setText(str);
-         if(flag==1)         //如果对方未下棋，标志位不会改变
-         {
-             QMessageBox msgBox;
-             msgBox.setText("请等待服务器下棋！！");
-             msgBox.exec();
-             qDebug()<<"等待对方";
-         }
-         else if(flag==0)    //初始化flag=0；发送自己的坐标
-         {
-         x=event->x();y=event->y();
-         QString str2 = QString::number(x) + "#" + QString::number(y);
-         QByteArray arry;
-         arry.append(str2);
-         tcpSock->write(arry);
-         }
+    {
+        str = "New-location:" + QString::number((event->x()-85)/40) + "   " + QString::number((event->y()-35)/40);
+        ui->lineEdit->setText(str);
+        if(flag==1)         //如果对方未下棋，标志位不会改变
+        {
+            QMessageBox msgBox;
+            msgBox.setText("请等待服务器下棋！！");
+            msgBox.exec();
+            qDebug()<<"等待对方";
+        }
+        else if(flag==0)    //初始化flag=0；发送自己的坐标
+        {
+            chessSound->play();
+            x=event->x();y=event->y();
+            QString str2 = QString::number(x) + "#" + QString::number(y);
+            QByteArray arry;
+            arry.append(str2);
+            tcpSock->write(arry);
+        }
         qDebug() <<"New-location:"<<event->x()<<event->y()<<x<<y<<endl;
     }
 
     update();  //要加重绘事件
 
- }
+}
 
 
- void  chessClient::initchessbord()
- {
+void  chessClient::initchessbord()
+{
 
-     for(int i=0;i<M;i++)            //M此刻是20
-         for(int j=0;j<M;j++)
-         {
-             chessbord[i][j]=' ';
-         }
+    for(int i=0;i<M;i++)            //M此刻是20
+        for(int j=0;j<M;j++)
+        {
+            chessbord[i][j]=' ';
+        }
 
- }
-
-//void chessClient::on_pushButton_clicked()
-//{
-//    initchessbord();
-//    x=876;y=826;
-//    flagjudget=1;
-//    flag=0;
-//    update();  //要加重绘事件
-//}
+}
 
 
 void chessClient::readyRead_Slots()
@@ -273,7 +268,7 @@ void chessClient::readyRead_Slots()
     {
         if(flagjudget==1)
         {
-        flagjudget=0;
+            flagjudget=0;
         }
         qDebug()<<"flagjudget="<<flagjudget;
     }
@@ -284,18 +279,18 @@ void chessClient::readyRead_Slots()
         QString strjudget;
         if(z==777)
         {
-          strjudget="黑棋胜利";
-          flag=0;
+            strjudget="黑棋胜利";
+            flag=0;
         }
         else if(z==888)
         {
-           strjudget="白棋胜利";
-           flag=0;
+            strjudget="白棋胜利";
+            flag=0;
         }
         else if(z==999)
         {
-           strjudget="平局";
-           flag=0;
+            strjudget="平局";
+            flag=0;
         }
         QMessageBox msgBox;
         msgBox.setText(strjudget);
@@ -305,8 +300,8 @@ void chessClient::readyRead_Slots()
         int ret = msgBox.exec();
         if(ret>=3000)
         {
-             qDebug()<<"ret="<<ret<<endl;
-             ui->lineEdit->setText("over!");
+            qDebug()<<"ret="<<ret<<endl;
+            ui->lineEdit->setText("over!");
         }
         else if(ret<=3000)
         {
@@ -315,7 +310,7 @@ void chessClient::readyRead_Slots()
             STR1="再来一局";        //比分在此显示
             ui->lineEdit->setText(STR1);
         }
-         initchessbord();
+        initchessbord();
 
     }
     qDebug()<<"x="<<x<<"z="<<z;

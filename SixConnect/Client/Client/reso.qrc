@@ -4,5 +4,6 @@
         <file>reso/logo.png</file>
         <file>reso/reconnect.png</file>
         <file>reso/reconnect2.png</file>
+        <file>reso/chessone.wav</file>
     </qresource>
 </RCC>
